@@ -1,0 +1,570 @@
+﻿PopoWiki UPDATING
+
+//-----------------------------------
+//  UPDATING.txt
+//-----------------------------------
+
+設置上の注意
+  popowikiは、悪意のない安全なローカル環境に設置・使用を前提としています。
+  公開サーバー上に設置しないでください。
+
+更新履歴
+========
+
+※詳細は公式Webサイトを参照して下さい
+
+リリースノート
+==============================
+
+PopoWiki 1.6.5 [2019/07/25]
+
+   1. 推奨PHPを変更しました PHP7.3以上
+   2. rel要素に noreferrer を追加しました
+   3. 更新 : Mobile Detect Library 2.8.33
+   4. その他の変更
+
+PopoWiki 1.6.4 [2017/01/20]
+
+   1. 推奨PHPを変更しました PHP5.6以上
+   2. strtotime : 返り値 失敗の判定の間違いを訂正しました
+   3. 更新 : Mobile Detect Library 2.8.24
+
+PopoWiki 1.6.3 [2016/06/25]
+
+   1. セクション単位の編集機能を追加しました。
+      編集へのリンクの規定値は、左寄せです
+      右寄せにしたい場合は、
+      define('POPOWIKI_EDIT_SECTION_RIGHT', 1);
+      を定義してください。
+      右寄せにした場合は、divタグが挿入されるため若干サイズが大きくなります。
+
+PopoWiki 1.6.2 [2016/06/05]
+
+   1. メンテナンスされていないspam機能を削除しました。
+      pukiwiki1.4.8から引き継いだ spam 機能を削除しました。
+      以下のファイルが削除されました
+      lib/plugin/general/spam.inc.php
+      lib/spam.inc.php
+      lib/spam.php
+      lib/spam_pickup.php
+      lib/spam_util.php
+      settings/spam.ini.php
+
+PopoWiki 1.6.1
+
+   1. モバイルスキンに対応しました
+      自動で切り替えるには、define('POPOWIKI_ENABLE_MOBILE_DETECT', 1);
+      skinフォルダに 'mobile.skin.php' を追加してください
+
+   2. 新しい定数
+      POPOWIKI_SKIN_URI : スキンのuriパスを指定してください
+                          デフォルト define('POPOWIKI_SKIN_URI', 'skin/');
+           いままでのSKIN_DIR定数は、内部パスとuri両方として使用されていましたが
+           セキュリティ上好ましくないので分離されました
+
+PopoWiki 1.6.0
+
+   1. 一部のプラグインの場所を移動しました。
+      pluginフォルダにないものは、lib/pluginのサブフォルダに移動しています。
+
+   2. ページ削除リンクを追加しました
+      ページを削除するのに内容を編集する必要がなくなりました。(いままで通りの方法で消すこともできます)
+
+   3. プラグイン動作の変更
+      (1) attach: アップロード時にexif情報の自動削除に対応しました(jpegのみ)
+
+PopoWiki 1.5.2
+
+   1. 簡易sessionログイン機能を実装しました
+      (1) 未ログイン状態で使用できることに制限が設けられました
+      (2) $auth_users に基づいて認証します
+          ローカルで常にログイン状態にしたい場合は、pukiwiki.ini.phpに
+          以下を記入することにより常にログイン状態にすることができます
+          設定方法は将来変更される可能性があります。
+          if ('127.0.0.1' == $_SERVER['REMOTE_ADDR'])
+          {
+              session_start();
+              $_COOKIE[session_name()] = session_id();
+              $_SESSION['id']      = -1;
+              $_SESSION['ip']      = $_SERVER['REMOTE_ADDR'];
+              $_SESSION['loginid'] = 'ユーザー名';
+              $auth_users['ユーザー名'] = '{x-php-md5}!!!';
+          }
+          強固な認証が必要な場合は、サーバーにIP制限とBasic認証を導入してください.
+          ※ popowikiは、悪意のない安全なローカル環境に設置・使用を前提としています。
+             公開サーバー上に設置しないでください。
+
+   2. 未ログイン状態で、使用できる項目が減りました。
+      (1) ログインしていない場合の挙動変更
+          plugin_プラグイン名_allow_no_login()　関数の追加
+          未定義とFalseの場合は、未ログイン状態で機能しないように変更しました
+
+   3. popowikiスキンの変更点
+     (1) 未ログイン状態でのメニューを非常時にする設定ができました
+        define('PKWK_HIDE_HELP_MENU', 1);  // ヘルプメニューを非表示にします
+        define('PKWK_HIDE_RSS_MENU', 1);   // RSSを禁止します
+        define('PKWK_HIDE_LOGIN_MENU', 1); // ログインへのリンクを非表示にします
+     (2) 検索メニューを隠す設定
+        $deny_plugin_no_login = array('search','list'); // Hide search bar
+     (3) 未ログイン状態で、ページ下部の LINK:を非表示にしました
+         表示させたい場合は、define('PKWK_SHOW_RELATED', 1); を定義してください
+
+   4. プラグイン動作の変更
+     (1) 未ログイン状態で以下の制限があります
+        attach: infoで一部の項目が非表示になりました
+                一覧表示のリンクを非表示にしました。
+                画像形式の一部を一覧表示しなくなりました。
+        その他のプラグイン: 一部のプラグインで、閲覧・書き込みできなくなりました
+
+   5. 新しい定数 POPOWIKI_CMS_MODE : settings/pukiwiki.ini.php
+     一括で、HTML定数を定義してくれます
+     詳しくは、 lib/define_cms_mode.php を参照してください
+
+  6. ヘルプを 1.4/Manual から Manual に変更しました
+
+PopoWiki 1.5.1
+
+   1. trackbackを削除しました
+
+PopoWiki 1.5.0
+
+   1. 簡易 書式貼り付け機能を実装しました。
+     (1) 通常ページ編集時のみ対応
+     (2) IE9未満は、選択範囲が取得できないので、最終行に挿入されます
+         IE8以下には対応しません(WindowsXPは、サポート終了済み製品のため)。firefoxなどを使ってください
+
+PopoWiki 1.4.13
+
+   1. spam 機能をファイルごと切り捨てれるようにコードを変更しました。
+      popowikiは、ローカル環境に設置・使用を前提としているため、
+      pukiwikiから引き継いだ この機能の不具合・メンテナンスはいたしません。
+      不具合が出た場合は、
+      pukiwiki.ini.php の $spam = 0; に修正して、この機能を停止してください。
+
+PopoWiki 1.4.12
+
+   1. 関数 check_action_editable を追加しました。
+     現在「 : 」で始まるページへの action経由での書き込みを禁止にします。
+     変更したプラグイン: comment , insert , memo , pcomment , vote
+     デフォルトでは有効になっています。
+     この機能を無効にし、変更前の動作にするには
+       define('ENABLE_CHECK_ACTION_EDITABLE' , FALSE);
+     をどこかに定義してください
+
+   2. PageName のチェックに関する不具合を修正しました
+
+     (1) page_write で PageNameのチェックをしていない不具合を修正しました
+         無効なPageNameが存在する場合、アップグレード前に修正してください。
+         renameプラグインで直接変更してください
+         ?plugin=rename
+
+     (2) 定数 ENABLE_DATA_SRC_CHECK_PAGENAME を追加しました
+         この定数は、通常使用には、必要ありません。
+        無効なPageNameのスパムを受けてコンテンツとして保存されてしまった場合、
+        define('ENABLE_DATA_SRC_CHECK_PAGENAME' , TRUE);
+        をどこかに定義すると get_existpages で 無効なPageName のチェックがされます。
+        ※ 無効なPageNameのコンテンツを削除する機能はありません。
+
+PopoWiki 1.4.11
+
+   1. flockに関する動作を一部変更しました。
+      表示すると is_freeze(): flock() failed と表示される 問題への一部対処
+      発生環境 php5.4 以上 の一部の環境 [[pukiwiki:質問箱4/574]]
+      SKIP_FILE_LOCK_ERROR を追加しました。デフォルトでは、FALSE です
+      PHP 5.3 以上では、 flockの自動解除が削除されましたので一部クラス化しました。
+      アップグレードの場合 既存の pukiwiki.ini.php :
+        define ( 'SKIP_FILE_LOCK_ERROR' , TRUE ); // FALSE : Pukiwiki Compatibility
+      を追加することで、flockの失敗を無視します。
+
+   2. 定数が追加されました
+     (1) SKIP_FILE_LOCK_ERROR
+  　    Pukiwikiと同様に、ロックを厳密にするには、 FALSE にしてください。
+       is_freeze() , pkwk_chown の問題への対処  [[pukiwiki:質問箱4/574]]
+       未定義のデフォルト: FALSE。
+
+   3. popular プラグインを更新しました
+      (1) 初期値に関する不具合を修正しました
+      (2) 第三引数の判定で、指定値以外受け付けないようにしました。
+          従来通り、何か文字があると、今日とみなすには、
+          define('PLUGIN_POPULAR_UNDEFINED_ALIAS_AS_BOOL', TRUE);
+          をどこかに定義してください
+      (3) 表示モードを追加しました
+          today, yesterday 
+          今日 , 昨日 : 日本語モードのみ
+          recent : １週間の２日間合計の多い順 (互換性のため搭載)
+      (4) 昨日を表示するのを禁止する場合は、
+           define('PLUGIN_POPULAR_NO_YESTERDAY', TRUE);
+          をどこかに定義してください
+ 
+PopoWiki 1.4.10
+
+   1. ファイル一覧で インデックスの大小文字の区別をなくしました(大文字に統一)
+
+   2. 定数が追加されました
+      (1) PLUGIN_SEARCH_EXEC_LIMIT
+          プラグインsearchの呼び出すことのできる回数を指定できます
+          (未定義の場合、互換性を保つため既定値は１になっています)
+         変更する場合は、
+　　　　　index.php 又は settings/pukiwiki.ini.php
+         などに記述してください
+
+   3. traker プラグインの修正をしました
+     (1) ソート順(asc,desc)の矢印を▲▼に変更しました。
+　　　    (昇順は、▲,↑。降順は、▼,↓)
+
+     (2) 「CVS待ち」の名称を「更新待ち」に変更しました
+        ページ名
+         :config/plugin/tracker/default
+        ファイル名
+         wiki/3A636F6E6669672F706C7567696E2F747261636B65722F64656661756C74.txt
+
+     (3) 試験的に、確認機能(プレビュー)を追加しました
+         ※ 必須項目機能には対応していません。
+         ※ アップロードファイル付き には 対応していません。
+        利用するには
+        ページ名
+           :config/plugin/tracker/default/form
+        ファイル名
+           wiki/3A636F6E6669672F706C7567696E2F747261636B65722F64656661756C742F666F726D.txt
+         の [_submit] 前に [_confirm] を追加してください
+          [_confirm] &nbsp;&nbsp; [_submit]
+
+   4. vote プラグインに表示モードを追加しました。
+      第1引数が [view] 又は [close] の場合、表示モードになり、投票ボタンは表示されません。
+      表示専用モード時にフォームタグ関連を出力しないように修正しました。
+      使用例
+         #vote([view],選択肢1,選択肢2[7])
+
+   5. MeCab に対応しました
+      [[pukiwiki.dev:BugTrack/496]] のパッチを適用。
+
+   6. その他のいくつかの不具合が修正されました
+
+PopoWiki 1.4.9: PopoWiki 1.4.8 との非互換点
+
+   1. 定数 PAGE_TITLE を追加しました。
+      この定数は、pukiwiki.ini.php の 変数 $page_title よりも優先されます。
+      起動時に PAGE_TITLE が定義されていると 値を $page_title に上書きします。
+
+PopoWiki 1.4.8: PukiWiki 1.4.8 との非互換点
+
+   1. PHP5.3未満のシステムのサポートを打ち切りました。
+      動作させるには PHP5.3 以上 が必要になります。
+
+   2. EUC版はありません。
+      使用するには、変換スクリプトで、UTF-8にデータとファイル名を変換する必要があります
+
+   3. 言語ファイルを lib/languagesに移動しました。
+      ja.lng.php --> lib/languages/ja.lng.php
+      en.lng.php --> lib/languages/en.lng.php
+
+   4. 設定ファイルを settings/ に移動しました。
+      ルートフォルダの
+        default.ini.php    domain.ini.php     keitai.ini.php
+        pukiwiki.ini.php
+        rules.ini.php      spam.ini.php
+      を移動しました。
+      index.phpに
+      define('SETTINGS_DIR', 'settings/'); // new ver 1.4.8 : settings/
+      を追加しました
+
+   5. lib/mbstring.php の削除
+
+   6. image/ の一部の画像を差し替えました
+        主なもの
+        削除 : image/ahl-good.png
+        削除 : image/b_pukiwiki.dev.png
+        削除 : image/b_pukiwiki.official.png
+        削除 : image/pukiwiki.gif
+        削除 : image/pukiwiki.png
+        差し替え : image/noimage.png
+        その他詳細省略
+
+   7. プラグインの削除
+        削除 : plugin/paint.inc.php
+
+   8. プラグインの読み込み制限の追加
+      pukiwiki.ini.php に $non_plugin_list , $load_plugin_list を追加しました。
+      $load_plugin_list を定義しないと停止します。
+      $non_plugin_list には、読み込み禁止のプラグイン名を正規表現の配列で代入してください。
+      $load_plugin_list には、読み込み許可のプラグイン名を正規表現の配列で代入してください。
+      ・読み込まれない場合
+        $load_plugin_list にマッチしないものは、読み込まれません。
+        $non_plugin_list  にマッチしたものは、読み込まれません。
+        $non_plugin_list  にマッチしたプラグインは $load_plugin_list は無視され読み込まれません。
+
+   9. 新しいデフォルトスキンで バージョンを隠せるように変更しました。
+      PopoWikiやPHPのバージョンなどを表示すると
+      各種プラグインやシステムのセキュリティホールを突かれる可能性がありますので
+      通常は、index.phpで定義して 隠す設定にしてください。
+      define('HIDE_VERSION_STRING', 1);
+      version , versionlist プラグインも影響を受けます。
+
+      HIDE_VERSION_STRING        各種バージョン情報の表示を抑制します
+      OUTPUT_HIDE_CORE_POWERDBY  ページ下の Powered by を非表示にします
+      OUTPUT_HIDE_CONVERT_TIME   ページ下の HTML convert time を非表示にします
+      OUTPUT_HIDE_LASTMODIFIED   ページ下の Last-modified を非表示にします
+
+  10. popowikiスキン を追加しました
+      popowiki.skin.php , popowiki.css.php
+      スキン用に グローバル変数 $MenuBar_Right  を追加しました.
+       $MenuBar_Rightの各要素は省略可能です。
+      'menu_pagename' : ページ名を指定します(includeされます)。
+      'source_html_tag' :
+      'head' , 'foot' はエスケープされないので、固定したhtmlタグを書くと便利です
+      例) index.php で定義します
+      $MenuBar_Right = array();
+      $MenuBar_Right['menu_pagename'] = 'MenuBar-Right';
+      $MenuBar_Right['source_html_tag'] = array(
+                          'head' => '<b>上の段</b><br />',
+                          'foot' => '<b>下の段<img src=""></b>' );
+
+  11. pukiwiki.ini.phpに 変数 $mail_header_lf_mode を追加しました。
+      基本的に　$mail_header_lf_mode = 0; にしてください。
+      Linux環境で、通知メールの本文にヘッダがまぎれる場合は、
+     サーバーにインストールされているメーラーがRFC 2822 に準拠していない可能性が
+     ありますので、
+       $mail_header_lf_mode = 1;
+     にして正常になるか試してください。
+     直らない場合は他の原因が考えられます。
+     (See [[pukiwiki.dev:BugTrack2/161]])
+
+  12. その他の修正
+
+-----------------------------------------------------------------------------
+
+リリース間の互換性に関する記述
+==============================
+
+[PukiWiki]
+PukiWiki 1.4.8: PukiWiki 1.4.7 との非互換点
+
+   1. これまでのTrackBack実装は、著作(創作)の手順が不適切である疑いが強くなっ
+      たため、完全に削除されました。同様にこの実装に依存していた referer 機能
+      も削除されました。
+      (See [[pukiwiki.dev:BugTrack2/62]])
+      既存のシステム上の関連ファイルの削除は各自行ってください。
+
+PukiWiki 1.4.7: PukiWiki 1.4.6 との非互換点
+
+   1. 管理者パスワード($adminpass)のデフォルト値が "pass" から、"(判定に絶対
+     に失敗する文字列)" に修正されました。
+       ※PukiWiki 1.4.6 のパスワードは 1.4.7 に移行できます
+       ※PukiWiki 1.4.6 以降、パスワードの保存形式は変更されています。
+         (See [[pukiwiki.dev:BugTrack/709]])
+
+   2. "ページが更新される度に、プログラムをサーバー内部で実行する機能" の実装
+     は、今後グローバル変数($update_exec)ではなく定数(PKWK_UPDATE_EXEC) を使
+     用します。
+ 
+     悪意を持った(しかし読み辛い)プラグインを使わざるをえない様に、誰かがあな
+     たに仕向けた場合、$update_exec を書き換えることで悪用が可能になります。
+     ("OSコマンドインジェクション" と呼ばれる脆弱性につながります)
+
+   3. 初期コンテンツ:
+      (See [[pukiwiki.dev:BugTrack2/118]])
+
+     (ja)
+       マルチバイト文字列に依存したファイル名が初期コンテンツに含まれていた問
+       題を解消した結果、以下のページの名称が変更されました。
+         "整形ルール" => FormattingRules (編集時のリンクから参照されています)
+         "ヘルプ"     => Help (上下のナビゲーションから常に参照されています)
+
+       また、以下のページは添付されなくなりました。
+         "InterWikiテクニカル" => "InterWiki" (内容を集約)
+         "日本語" (削除)
+
+     (en)
+       以下のページ名が修正されました。
+         "FormatRule" => "FormattingRules"
+
+       また、設定 "$rule_page" は "Text Formatting Rules"(※存在しないページ)
+       ではなく "FormattingRules" をデフォルトで指定する様になりました。
+
+     これらの新しいページを追加する場合、忘れずに"凍結"して下さい。
+
+   4. ファイル: 下記のファイルが添付されなくなりました。
+     pukiwiki.php    : 必要であれば index.php をコピーしてお使い下さい。
+     skin/default.js : どこからも利用されていませんでした。
+
+   5. 脚注: 脚注のリンクに埋め込まれていた "脚注そのもの(文字列)" は、脚注全
+     文ではなく、決められた文字数だけ出力します。 (See [[pukiwiki.dev:BugTrack/420]])
+
+   6. プラグイン: 以下のプラグインは、$non_list(一覧しないパターン) に合致
+     するページを表示しません。 (See [[pukiwiki.dev:BugTrack2/140]], [[pukiwiki.dev:BugTrack2/175]])
+       attach, popular, related, touchgraph, yetlist
+
+
+PukiWiki 1.4.6: PukiWiki 1.4.5_1 との非互換点
+
+    1. 管理者パスワードとベーシック認証で用いるユーザーパスワードについて、パ
+       スワードの保存方法を九種類の中から選択できる様になりました。この指定方
+       法は LDAP で使用されているものと同一で、RFC2307に準拠しています。(うち
+       五種類は OpenLDAP 互換)
+
+       そのため、今後はパスワードの先頭に、その保存方法(スキーム)が何であるか
+       を明記する必要があります。例えば従来通りMD5ハッシュを用いる場合、先頭に
+       '{x-php-md5}' を追加して下さい。
+
+         // md5('pass')
+         $adminpass = '{x-php-md5}1a1dc91c907325c69271ddf0c944bc72';
+
+       スキームの宣言がないとき、パスワードは平文で保存されていると解釈されま
+       す。
+
+         $auth_users = array(
+           'foo'  => 'foo_passwd', // 平文 (推奨しません)
+           'bar'  => '{x-php-md5}f53ae779077e987718cc285b14dfbe86',
+	             // md5('bar_passwd')
+           'hoge' => '{SMD5}OzJo/boHwM4q5R+g7LCOx2xGMkFKRVEx',
+	             // LDAP SMD5 'hoge_passwd'
+         );
+
+       平文を除く八種類の保存フォーマットについては、強化された md5プラグイン
+       で生成・検証することができます。
+       ※信頼できない環境ではmd5プラグインを使用しないで下さい
+
+    2. 新しいパスワード保存方法の中に crypt() 関数を使用するものが二種類ありま
+       す('{x-php-crypt}', '{CRYPT}')が、crypt() 関数の出力はシステム依存で
+       す。他のシステムへ / 他のシステムから設定を持ち越した場合に動作しない
+       (異なる結果が出力された結果、認証が通らない)可能性があります。
+
+       新旧双方の環境でmd5プラグインを使い、crypt()の結果を比較することで、あ
+       る程度事前に検証する事が可能でしょう。
+
+    3. 新しいパスワード保存方法の中に SHA-1 アルゴリズムを使用するものが三種類
+       あります('{x-php-sha1}', '{SHA}', '{SSHA}')が、このアルゴリズムは PHP
+       4.3.0 以降、あるいは 'mhash' エクステンションが組み込まれた環境でなけれ
+       ば利用できません。したがって該当する環境でなければ、これらのパスワード
+       保存方式を利用することはできません。
+
+    4. サーバーと閲覧者へのDoSを回避するためのリミッターとして、プラグインの呼
+       び出し回数をチェックする機構が追加されました。この結果、いずれかのプラ
+       グインが一定回数 (デフォルト:768回)を越えて呼び出された場合、即座にメッ
+       セージとリンクを表示した後、出力処理が終了します。
+
+       そのため、非常に長い文書の中に同一のプラグインを一定個数以上記載してい
+       る場合に、閲覧が行えなくなる可能性(編集は可能)をもたらします。そのよう
+       な場合、必要に応じて lib/plugin.php にある定数
+       PKWK_PLUGIN_CALL_TIME_LIMIT の値を拡大するか、(編集は可能であろうため)
+       該当ページのコンテンツを適宜複数のページに分割して下さい。
+
+       この場合のプラグインとは、ブロック型 「#プラグイン名」およびインライン
+       型「&プラグイン名;」の全てです。特に後者については「&amp;」のようなHTML
+       エンティティも対象になります。(PukiWikiはHTMLエンティティもプラグイン
+       であると認識します)
+
+    5. (PukiWiki 1.4.5において) 特にOperaブラウザのために、脚注に対する「相対
+       リンク」が「絶対リンク」となるように変更が行われされましたが、ふたたび
+      「相対リンク」となるように修正されました。(詳しくは: [[pukiwiki.dev:BugTrack/698]])
+
+       (1) calendar_viewerプラグインやincludeプラグインなど、他のページをイン
+         クルードするプラグインを使用したページの脚注(これらは相対リンクを想定
+         しています) に移動する代わりに、インクルード元のページの脚注に移動し
+         てしまう副作用が発生していたため
+
+       (2) 最新のOperaブラウザでは相対リンクによる影響は修正されているとの報告
+         を受けているため
+
+       定数 PKWK_ALLOW_RELATIVE_FOOTNOTE_ANCHOR(default.ini.php)の値を変更する
+       ことにより、1.4.5 当時の状態(絶対パス)にすることが可能です。
+
+    6. calendar_viewerプラグインが表示するページのタイトル(日付入りのページ名)
+       について、表示フォーマットを切り替えられる様になりました。また、デフォ
+       ルトが「文字列/YYYY-MM-DD」から「年/月/日 (曜日)」となりました。この
+       フォーマットはcalendar_viewerプラグインの先頭で指定する事ができ、元通り
+       に直すことも可能です。
+
+    7. 管理者に電子メールで通知を行う関数 pkwk_mail_notify() が作成されまし
+       た。この関数は自明な値をあらかじめ保持しますが、その副作用として、
+       $notify_header に従来通り From: を設定している場合に From: が重複し、結
+       果的にメールが送信されない可能性があります。
+
+       過去のバージョンから設定の値をコピーする場合、 $notify_header には
+       From: を含めないように修正して下さい。
+
+       PKWK_OPTIMISE が無効となっている時には、From: が重複しているかどうかな
+       どのチェックが行われ、あればエラーを表示します。
+
+    8. 画像のように見えるURIを「インライン画像としてリンク」しないための定数
+       PKWK_DISABLE_INLINE_IMAGE_FROM_URI を有効にすることにより、まさに該当の
+       機能を実現する「imgプラグイン」は機能が無効になります。([[pukiwiki.dev:BugTrack2/69]])
+
+       その結果、#img(,clear) という表記で「テキストの回り込み指定を解除」する
+       機能も無効になります。この機能は img プラグイン とセットで用いるために
+       用意されたものであるため、#img(,clear) を部分的に有効にした場合の影響は
+       予測できません。
+
+       #imgプラグインと無関係な部分であれば、#img(,clear)の代わりに、それ同じ
+       機能を有する #clearプラグイン を使用して下さい。
+
+
+PukiWiki 1.4.5_1: PukiWiki 1.4.4との非互換点
+
+    1. デフォルトのスキン(enとja)が統合されています。
+       1.4.4用にリリースされているサードパーティ製スキンはほぼそのまま利用でき
+       ますが、ファイル名を含め、若干の調整を必要とするでしょう。
+
+    2. デフォルトのCSS(screen用とprint用)が統合されています。
+       ファイル名に変化がありますが、出力されるCSSの構造的な変化はありません。
+
+    3. :config/plugin/tracker/default の設定が見直されました。
+       特に英語版との兼ね合いにより「優先順位(priority)」が「重要度
+       (Severity)」に改められましたが、互換性を重視し、既に作成されたページに
+       影響が出る部分はそのまま残されています。
+
+    4. 1.4.5以降のスキン、および :config/plugin/tracker/default の内容は新しく
+       用意された機能あるいは変数を使用しているため、以前のPukiWikiでは利用で
+       きません。
+
+    5. ワームなどによる「非現実的な長さのクエリ文字列」をブロックする機能が盛
+      り込まれたため、今までに「極端にページ名が長いページ」に「極端にファイル
+      名が長いファイル」が添付されている場合、それを操作できなくなる可能性があ
+      ります。この場合、定数PKWK_QUERY_STRING_MAX を調節することで回避すること
+      が可能です。
+      また、用途がイントラネット向けであれば、PKWK_QUERY_STRING_MAX の値を 0
+      にすることにより、この機能を無効にすることができます。
+
+    6. 脚注に対するURLが、ページ内相対リンクのみ(#hogehoge)から絶対パス
+       (http://path/to/pkwk?ページ名#hogehoge)に変更されました。
+       これは Opera ブラウザの不具合に対するものですが、副作用として
+       calendar_viewer() のようなインクルード系のプラグインの中の脚注リンクを
+       クリックした場合、個別のページに画面遷移するようになっています。
+       (See [[pukiwiki.dev:BugTrack/698]] for detail)
+
+
+PukiWiki 1.4.4: PukiWiki 1.4.3との非互換点
+
+    1. includeプラグインにリミッターが設けられました(デフォルトで４ページまで)
+
+    2. calendar_viewerプラグインにリミッターが設けられました(一テーマ一回まで)
+       ※将来のリリースで、数回までに拡張される可能性があります
+
+    3. Apache Webサーバー向けに .htaccess ファイルが同梱される様になりました。
+       サーバー上で .htaccess が有効であるとき、例えばattach ディレクトリに保
+       存した添付ファイルに直接アクセスすることができなくなります。この結果、
+       古いバージョンのrefプラグインや、そこから派生したプラグインはうまく動
+       作しないでしょう
+       (これらの制限は、.htaccess を削除することで解除できます)
+
+    4. 初期化処理(init.php)が大幅に見直され、PukiWikiにとって不要なグローバル
+       変数(特に、危険なデータを含んでいるもの)が積極的に削除(unset)される様に
+       なりました。具体的には $_REQUEST, $HTTP_GET_VARS, $HTTP_POST_VARS,
+       HTTP_USER_AGENT 関係, REQUEST_URI 関係, QUERY_STRING 関係のデータにアク
+       セスしていたサードパーティ製プラグインやカスタマイズ部分は、適切に動作
+       しなくなるでしょう
+
+PukiWiki 1.4.3: PukiWiki 1.4.2との非互換点
+
+    1.  trackbackディレクトリに保存されるファイル名の規則が変わりました
+        trackback/referer機能をお使いで、1.4.2から1.4.3へ移行される場合は、
+        PukiWikir-devサイト (http://pukiwiki.osdn.jp/dev/)の、
+        "開発日記/2004-03-18" を参照して作業を行ってください。
+
+PukiWiki 1.4: PukiWiki 1.3.xとの非互換点
+
+    1.  [[WikiName]] と WikiName は同じページを指します
+    2.  定義リストの書式が違います (:term:description -> :term|description)
+    3.  リストや引用文は、下位レベルのリストや引用文を包めることができます
+        (1.3.xでは、リストは同種のみ、引用内には引用しか包含できませんでした)
+
